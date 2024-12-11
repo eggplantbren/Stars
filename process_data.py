@@ -13,6 +13,9 @@ verr = data.iloc[:,7] - np.mean(data.iloc[:,7])
 x = (ra - ra.mean())*np.cos(np.mean(dec))
 y = (dec - dec.mean())
 
+# Flip x axis
+x = -x
+
 data = np.vstack([x, y, v, verr]).T
 np.savetxt("data.txt", data)
 
@@ -21,6 +24,6 @@ plt.scatter(x[v > 0], y[v > 0], s=10.0*np.abs(v[v > 0]),
 plt.scatter(x[v <= 0], y[v <= 0], s=10.0*np.abs(v[v <= 0]),
             marker="o", color="blue", alpha=0.5)
 plt.axis("equal")
-plt.gca().invert_xaxis()
+#plt.gca().invert_xaxis()
 plt.show()
 
