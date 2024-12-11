@@ -38,7 +38,7 @@ def log_likelihood(params):
                     - 0.5*((xx**2*q + yy**2/q)/L**2))
 
     # Now do the kinematics
-    dist = x*np.sin(phi_v) - y*np.cos(phi_v)
+    dist = (x - xc)*np.sin(phi_v) - (y - yc)*np.cos(phi_v)
     mu = mu_v + A_v*np.tanh(dist/L_v)
 
     var = sig_v**2 + verr**2
