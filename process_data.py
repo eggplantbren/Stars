@@ -21,5 +21,6 @@ plt.scatter(x[v > 0], y[v > 0], s=10.0*np.abs(v[v > 0]),
 plt.scatter(x[v <= 0], y[v <= 0], s=10.0*np.abs(v[v <= 0]),
             marker="o", color="blue", alpha=0.5)
 plt.axis("equal")
+plt.gca().invert_xaxis()
 plt.show()
 
