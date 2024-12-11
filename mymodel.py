@@ -4,7 +4,7 @@ data = np.loadtxt("data.txt")
 x, y, v, verr = data[:,0], data[:,1], data[:,2], data[:,3]
 
 
-num_params = 9
+num_params = 10
 
 def prior_transform(us):
 
@@ -21,12 +21,13 @@ def prior_transform(us):
     A_v = 10.0**(-1.0 +  4.0*us[6])
     L_v = 10.0**(-3.0 + 3.0*us[7])
     sig_v = 10.0**(-1.0 +  4.0*us[8])
+    phi_v = 2.0*np.pi*us[9]
 
-    return np.array([xc, yc, phi, q, L, mu_v, A_v, L_v, sig_v])
+    return np.array([xc, yc, phi, q, L, mu_v, A_v, L_v, sig_v, phi_v])
 
 def log_likelihood(params):
 
-    xc, yc, phi, q, L, mu_v, A_v, L_v, sig_v = params
+    xc, yc, phi, q, L, mu_v, A_v, L_v, sig_v, phi_v = params
 
     # This first term is to do with the elliptical gaussian density on the sky
     xx =  (x - xc)*np.cos(phi) + (y - yc)*np.sin(phi)
@@ -37,7 +38,7 @@ def log_likelihood(params):
                     - 0.5*((xx**2*q + yy**2/q)/L**2))
 
     # Now do the kinematics
-    dist = x*np.sin(phi) - y*np.cos(phi)
+    dist = x*np.sin(phi_v) - y*np.cos(phi_v)
     mu = mu_v + A_v*np.tanh(dist/L_v)
 
     var = sig_v**2 + verr**2
