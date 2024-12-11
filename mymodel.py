@@ -1,5 +1,8 @@
 import numpy as np
 
+data = np.loadtxt("data.txt")
+x, y, v, verr = data[:,0], data[:,1], data[:,2], data[:,3]
+
 
 num_params = 10
 
