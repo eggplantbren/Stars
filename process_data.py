@@ -7,8 +7,8 @@ data = data.loc[data.iloc[:, 0] != 5, :]
 
 ra = data.iloc[:,2]
 dec = data.iloc[:,3]
-v = data.iloc[:,6] - np.mean(data.iloc[:,6])
-verr = data.iloc[:,7] - np.mean(data.iloc[:,7])
+v = data.iloc[:,6]
+verr = data.iloc[:,7]
 
 x = (ra - ra.mean())*np.cos(np.mean(dec))
 y = (dec - dec.mean())
