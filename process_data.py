@@ -4,6 +4,7 @@ import pandas as pd
 
 data = pd.read_csv("stars_edited.txt", delim_whitespace=True, header=None)
 data = data.loc[data.iloc[:, 0] != 5, :]
+data = data.loc[data.iloc[:, 0] != 8, :]
 
 ra = data.iloc[:,2]
 dec = data.iloc[:,3]
