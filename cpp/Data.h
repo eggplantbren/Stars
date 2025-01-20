@@ -15,6 +15,7 @@ class Data
         Data(const char* filename);
 
         static Data instance;
+        friend class MyModel;
 };
 
 } // namespace

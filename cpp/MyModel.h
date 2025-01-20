@@ -4,10 +4,18 @@
 #include "DNest4/code/DNest4.h"
 #include <ostream>
 
+namespace Stars
+{
+
 class MyModel
 {
     private:
 
+        // Mean velocity parameter
+        double mu;
+
+        // Velocity dispersion
+        double sigma;
 
     public:
         // Constructor only gives size of params
@@ -28,6 +36,8 @@ class MyModel
         // Return string with column information
         std::string description() const;
 };
+
+} // namespace
 
 #endif
 
