@@ -8,12 +8,19 @@ import matplotlib.pyplot as plt
 # Set up fonts
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.size"] = 14
-plt.rc("text", usetex=True)
 
+ndim = 2
 posterior_sample = np.loadtxt("posterior_sample.txt")
-corner.corner(posterior_sample,
-    labels=["$\\mu_v$", "$\\sigma_v$"], plot_contours=False,
-        plot_density=False, fontsize=14)
+
+figure = corner.corner(posterior_sample,
+    labels=["$\\mu$", "$\\sigma$"], plot_contours=False,
+        plot_density=False, fontsize=14 , hist_kwargs={"color":"blue", "alpha":0.3, "histtype":"stepfilled", "edgecolor":"black","lw":"3"} )
+
+axes = np.array(figure.axes).reshape((ndim, ndim))
+
+for i in range(ndim):
+	ax = axes[i,i]
+	print( ax )
 plt.show()
 
 #plt.savefig("cornerplot.png", dpi=450)
