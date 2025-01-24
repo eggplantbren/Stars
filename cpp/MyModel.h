@@ -17,6 +17,11 @@ class MyModel
         // Velocity dispersion
         double sigma;
 
+        // Rotational parameters
+        double A;
+        double phi;
+        double xc, yc;
+
     public:
         // Constructor only gives size of params
         MyModel();

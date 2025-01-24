@@ -15,25 +15,53 @@ void MyModel::from_prior(DNest4::RNG& rng)
 {
     mu = -1000.0 + 2000.0*rng.rand();
     sigma = pow(10.0, -3.0 + 6.0*rng.rand());
+
+    A = pow(10.0, -3.0 + 6.0*rng.rand());
+    phi = 2.0*M_PI*rng.rand();
+    xc = -1.0 + 2.0*rng.rand();
+    yc = -1.0 + 2.0*rng.rand();
 }
 
 double MyModel::perturb(DNest4::RNG& rng)
 {
     double logH = 0.0;
 
-    int which = rng.rand_int(2);
+    int which = rng.rand_int(6);
     if(which == 0)
     {
         mu += 2000.0*rng.randh();
         DNest4::wrap(mu, -1000.0, 1000.0);
     }
-    else
+    else if(which == 1)
     {
         sigma = log10(sigma);
         sigma += 6.0*rng.randh();
         DNest4::wrap(sigma, -3.0, 3.0);
         sigma = pow(10.0, sigma);
     }
+    else if(which == 2)
+    {
+        A = log10(A);
+        A += 6.0*rng.randh();
+        DNest4::wrap(A, -3.0, 3.0);
+        A = pow(10.0, A);
+    }
+    else if(which == 3)
+    {
+        phi += 2.0*M_PI*rng.rand();
+        DNest4::wrap(phi, 0.0, 2.0*M_PI);
+    }
+    else if(which == 4)
+    {
+        xc += 2.0*rng.randh();
+        DNest4::wrap(xc, -1.0, 1.0);
+    }
+    else
+    {
+        yc += 2.0*rng.randh();
+        DNest4::wrap(yc, -1.0, 1.0);
+    }
+
 
     return logH;
 }
@@ -47,9 +75,13 @@ double MyModel::log_likelihood() const
     double var;
     for(size_t i=0; i<data.x.size(); ++i)
     {
+        // Predicted value of radial velocity from the parameters
+        double theta = atan2(data.y[i], data.x[i]);
+        double mu_v = mu + A*sin(theta - phi);
+
         var = sigma*sigma + data.verr[i]*data.verr[i];
         logL += -0.5*log(2.0*M_PI*var)
-                - 0.5*pow(data.v[i] - mu, 2)/var;
+                - 0.5*pow(data.v[i] - mu_v, 2)/var;
     }
 
     return logL;
@@ -57,12 +89,13 @@ double MyModel::log_likelihood() const
 
 void MyModel::print(std::ostream& out) const
 {
-    out << mu << ' ' << sigma;
+    out << mu << ' ' << sigma << ' ';
+    out << A << ' ' << phi << ' ' << xc << ' ' << yc;
 }
 
 std::string MyModel::description() const
 {
-    return std::string("mu sigma");
+    return std::string("mu sigma A phi xc yc");
 }
 
 } // namespace
