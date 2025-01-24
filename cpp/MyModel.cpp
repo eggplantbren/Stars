@@ -76,7 +76,7 @@ double MyModel::log_likelihood() const
     for(size_t i=0; i<data.x.size(); ++i)
     {
         // Predicted value of radial velocity from the parameters
-        double theta = atan2(data.y[i], data.x[i]);
+        double theta = atan2(data.y[i] - yc, data.x[i] - xc);
         double mu_v = mu + A*sin(theta - phi);
 
         var = sigma*sigma + data.verr[i]*data.verr[i];
