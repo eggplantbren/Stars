@@ -13,38 +13,39 @@ MyModel::MyModel()
 
 void MyModel::from_prior(DNest4::RNG& rng)
 {
+    xc = -1.0 + 2.0*rng.rand();
+    yc = -1.0 + 2.0*rng.rand();
+    q = rng.rand();
+    phi = 2.0*M_PI*rng.rand();
+    L = pow(10.0, -3.0 + 3.0*rng.rand());
+
     mu = -1000.0 + 2000.0*rng.rand();
     sigma = pow(10.0, -3.0 + 6.0*rng.rand());
 
     A = pow(10.0, -3.0 + 6.0*rng.rand());
-    phi = 2.0*M_PI*rng.rand();
-    xc = -1.0 + 2.0*rng.rand();
-    yc = -1.0 + 2.0*rng.rand();
+    phi_v = 2.0*M_PI*rng.rand();
 }
 
 double MyModel::perturb(DNest4::RNG& rng)
 {
     double logH = 0.0;
 
-    int which = rng.rand_int(6);
+    int which = rng.rand_int(9);
+
     if(which == 0)
     {
-        mu += 2000.0*rng.randh();
-        DNest4::wrap(mu, -1000.0, 1000.0);
+        xc += 2.0*rng.randh();
+        DNest4::wrap(xc, -1.0, 1.0);
     }
     else if(which == 1)
     {
-        sigma = log10(sigma);
-        sigma += 6.0*rng.randh();
-        DNest4::wrap(sigma, -3.0, 3.0);
-        sigma = pow(10.0, sigma);
+        yc += 2.0*rng.randh();
+        DNest4::wrap(yc, -1.0, 1.0);
     }
     else if(which == 2)
     {
-        A = log10(A);
-        A += 6.0*rng.randh();
-        DNest4::wrap(A, -3.0, 3.0);
-        A = pow(10.0, A);
+        q += rng.randh();
+        DNest4::wrap(q, 0.0, 1.0);
     }
     else if(which == 3)
     {
@@ -53,14 +54,36 @@ double MyModel::perturb(DNest4::RNG& rng)
     }
     else if(which == 4)
     {
-        xc += 2.0*rng.randh();
-        DNest4::wrap(xc, -1.0, 1.0);
+        L = log10(L);
+        L += 3.0*rng.randh();
+        DNest4::wrap(L, -3.0, 0.0);
+        L = pow(10.0, L);
+    }
+    else if(which == 5)
+    {
+        mu += 2000.0*rng.randh();
+        DNest4::wrap(mu, -1000.0, 1000.0);
+    }
+    else if(which == 6)
+    {
+        sigma = log10(sigma);
+        sigma += 6.0*rng.randh();
+        DNest4::wrap(sigma, -3.0, 3.0);
+        sigma = pow(10.0, sigma);
+    }
+    else if(which == 7)
+    {
+        A = log10(A);
+        A += 6.0*rng.randh();
+        DNest4::wrap(A, -3.0, 3.0);
+        A = pow(10.0, A);
     }
     else
     {
-        yc += 2.0*rng.randh();
-        DNest4::wrap(yc, -1.0, 1.0);
+        phi_v += 2.0*M_PI*rng.rand();
+        DNest4::wrap(phi_v, 0.0, 2.0*M_PI);
     }
+
 
 
     return logH;
@@ -87,15 +110,31 @@ double MyModel::log_likelihood() const
     return logL;
 }
 
+        // Spatial parameters
+        double xc, yc;
+        double q, phi;
+        double L;
+
+        // Mean velocity parameter
+        double mu;
+
+        // Velocity dispersion
+        double sigma;
+
+        // Rotational parameters
+        double A;
+        double phi_v;
+
 void MyModel::print(std::ostream& out) const
 {
+    out << xc << ' ' << yc << ' ' << q << ' ' << phi << ' ' << L << ' ';
     out << mu << ' ' << sigma << ' ';
-    out << A << ' ' << phi << ' ' << xc << ' ' << yc;
+    out << A << ' ' << phi_v;
 }
 
 std::string MyModel::description() const
 {
-    return std::string("mu sigma A phi xc yc");
+    return std::string("xc yc q phi L mu sigma A phi_v");
 }
 
 } // namespace

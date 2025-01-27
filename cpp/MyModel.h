@@ -11,6 +11,11 @@ class MyModel
 {
     private:
 
+        // Spatial parameters
+        double xc, yc;
+        double q, phi;
+        double L;
+
         // Mean velocity parameter
         double mu;
 
@@ -19,8 +24,7 @@ class MyModel
 
         // Rotational parameters
         double A;
-        double phi;
-        double xc, yc;
+        double phi_v;
 
     public:
         // Constructor only gives size of params
