@@ -95,12 +95,21 @@ double MyModel::log_likelihood() const
 
     const Data& data = Data::instance;
 
-    double var;
+    double xx, yy, var;
+    double cos_phi = cos(phi);
+    double sin_phi = sin(phi);
     for(size_t i=0; i<data.x.size(); ++i)
     {
+        // Spatial part
+        xx = (data.x[i] - xc)*cos_phi + (data.y[i] - yc)*sin_phi;
+        yy = -(data.x[i] - xc)*sin_phi + (data.y[i] - yc)*cos_phi;
+        logL += -0.5*log(2.0*M_PI*L*L)
+                - 0.5*(pow(xx, 2)*q + pow(yy, 2)/q)/(L*L);
+
+        // Kinematic part
         // Predicted value of radial velocity from the parameters
         double theta = atan2(data.y[i] - yc, data.x[i] - xc);
-        double mu_v = mu + A*sin(theta - phi);
+        double mu_v = mu + A*sin(theta - phi_v);
 
         var = sigma*sigma + data.verr[i]*data.verr[i];
         logL += -0.5*log(2.0*M_PI*var)
