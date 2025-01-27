@@ -110,21 +110,6 @@ double MyModel::log_likelihood() const
     return logL;
 }
 
-        // Spatial parameters
-        double xc, yc;
-        double q, phi;
-        double L;
-
-        // Mean velocity parameter
-        double mu;
-
-        // Velocity dispersion
-        double sigma;
-
-        // Rotational parameters
-        double A;
-        double phi_v;
-
 void MyModel::print(std::ostream& out) const
 {
     out << xc << ' ' << yc << ' ' << q << ' ' << phi << ' ' << L << ' ';
